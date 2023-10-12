@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medidas do Corpo</title>
+
+    <style>
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .form-row label, .form-row input {
+            width: 48%; /* Permite que fiquem dois itens lado a lado com um pequeno espaço entre eles */
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <h2>Insira as Medidas</h2>
+
+    <form id="measureForm">
+        <div class="form-row">
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" name="nome" required>
+        </div>
+
+        <div class="form-row">
+            <label for="braco_d">Braço Direito:</label>
+            <input type="text" id="braco_d" name="braco_d">
+        </div>
+
+        <div class="form-row">
+            <label for="braco_e">Braço Esquerdo:</label>
+            <input type="text" id="braco_e" name="braco_e">
+        </div>
+
+        <div class="form-row">
+            <label for="antebraco_d">Antebraço Direito:</label>
+            <input type="text" id="antebraco_d" name="antebraco_d">
+        </div>
+
+        <div class="form-row">
+            <label for="antebraco_e">Antebraço Esquerdo:</label>
+            <input type="text" id="antebraco_e" name="antebraco_e">
+        </div>
+
+        <div class="form-row">
+            <label for="abdomen">Abdomen:</label>
+            <input type="text" id="abdomen" name="abdomen">
+        </div>
+
+        <div class="form-row">
+            <label for="quadril">Quadril:</label>
+            <input type="text" id="quadril" name="quadril">
+        </div>
+
+        <div class="form-row">
+            <label for="coxa_d">Coxa Direita:</label>
+            <input type="text" id="coxa_d" name="coxa_d">
+        </div>
+
+        <div class="form-row">
+            <label for="coxa_e">Coxa Esquerda:</label>
+            <input type="text" id="coxa_e" name="coxa_e">
+        </div>
+
+        <div class="form-row">
+            <label for="panturilha_e">Panturilha Esquerda:</label>
+            <input type="text" id="panturilha_e" name="panturilha_e">
+        </div>
+
+        <div class="form-row">
+            <label for="panturilha_d">Panturilha Direita:</label>
+            <input type="text" id="panturilha_d" name="panturilha_d">
+        </div>
+
+        <input type="submit" value="Salvar">
+    </form>
+
+    <h2>Histórico de Medidas</h2>
+    <ul id="historyList"></ul>
+
+
+
+    <script>
+        function loadHistory() {
+        const history = JSON.parse(localStorage.getItem('history')) || [];
+        const list = document.getElementById('historyList');
+        list.innerHTML = ''; // limpa a lista
+
+        history.forEach(item => {
+            const li = document.createElement('li');
+            li.textContent = item;
+            list.appendChild(li);
+        });
+    }
+
+    document.getElementById('measureForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const nome = document.getElementById('nome').value;
+        
+        const medidas = {
+            "Braço Direito": document.getElementById('braco_d').value,
+            "Braço Esquerdo": document.getElementById('braco_e').value,
+            "Antebraço Direito": document.getElementById('antebraco_d').value,
+            "Antebraço Esquerdo": document.getElementById('antebraco_e').value,
+            "Abdomen": document.getElementById('abdomen').value,
+            "Quadril": document.getElementById('quadril').value,
+            "Coxa Direita": document.getElementById('coxa_d').value,
+            "Coxa Esquerda": document.getElementById('coxa_e').value,
+            "Panturilha Esquerda": document.getElementById('panturilha_e').value,
+            "Panturilha Direita": document.getElementById('panturilha_d').value
+        };
+
+        const date = new Date().toLocaleDateString();
+
+        let historyItem = `Nome: ${nome}, Data: ${date}, `;
+        for (let [key, value] of Object.entries(medidas)) {
+            historyItem += `${key}: ${value}, `;
+        }
+        historyItem = historyItem.slice(0, -2);  // Remove vírgula e espaço extras
+
+        // Salva no localStorage
+        const history = JSON.parse(localStorage.getItem('history')) || [];
+        history.push(historyItem);
+        localStorage.setItem('history', JSON.stringify(history));
+
+        loadHistory(); // atualiza a lista do histórico
+    });
+
+    loadHistory(); // carrega o histórico ao abrir a página
+
+    </script>
+</body>
+</html>
